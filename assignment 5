@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+std::string longest_common_substring(std::string str1, std::string str2) {
+    int len1 = str1.size(), len2 = str2.size();
+    std::vector<std::vector<int>> table(len1+1, std::vector<int>(len2+1, 0));
+    int longest_length = 0;
+    int row, col;
+
+    for (int i = 0; i <= len1; i++) {
+        for (int j = 0; j <= len2; j++) {
+            if (i == 0 || j == 0) {
+                table[i][j] = 0;
+            } else if (str1[i-1] == str2[j-1]) {
+                table[i][j] = table[i-1][j-1] + 1;
+                if (table[i][j] > longest_length) {
+                    longest_length = table[i][j];
+                    row = i;
+                    col = j;
+                }
+            } else {
+                table[i][j] = 0;
+            }
+        }
+    }
+
+    if (longest_length == 0) {
+        return "";
+    }
+
+    std::string result = "";
+    while (table[row][col] != 0) {
+        result = str1[row-1] + result;
+        row--;
+        col--;
+    }
+
+    return result;
+}
+
+int main() {
+    std::string str1 = "ABAB";
+    std::string str2 = "BABA";
+    std::string lcs = longest_common_substring(str1, str2);
+    std::cout << "Longest Common Substring: " << lcs << std::endl;
+    return 0;
+}
+
